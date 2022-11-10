@@ -3,3 +3,4 @@
 
 npx pretty-quick --staged
 pnpm run test
+git add .
