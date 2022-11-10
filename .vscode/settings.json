@@ -1,0 +1,4 @@
+{
+  "githubPullRequests.ignoredPullRequestBranches": ["main"],
+  "task.allowAutomaticTasks": "on"
+}
