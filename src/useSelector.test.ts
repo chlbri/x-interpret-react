@@ -17,6 +17,6 @@ describe('Workflow', () => {
       service.send('CLICK');
     });
 
-    expect(result.current).toBe('off');
+    expect(result.current).toBe('on');
   });
 });
