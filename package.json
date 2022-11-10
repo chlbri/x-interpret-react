@@ -26,11 +26,6 @@
     "postpublish": "git fetch & git pull",
     "prepublishOnly": "pnpm run build && pnpm run lint"
   },
-  "husky": {
-    "hooks": {
-      "pre-commit": "pnpm run test"
-    }
-  },
   "name": "@bemedev/x-interpret-react",
   "author": "chlbri <bri_lvi@icloud.com>",
   "devDependencies": {
