@@ -13,10 +13,10 @@ describe('Workflow', () => {
     );
     expect(result.current).toBe('off');
 
-    service.status; //?
     await act(() => {
       service.send('CLICK');
     });
+
     expect(result.current).toBe('on');
   });
 });

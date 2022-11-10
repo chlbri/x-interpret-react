@@ -21,7 +21,7 @@ import type {
 } from 'xstate';
 import { interpret } from 'xstate';
 import _useSelector from './useSelector';
-import { defaultSelector, matches, UseMatchesProps } from './utils';
+import { matches, UseMatchesProps } from './utils';
 
 export default function reactInterpret<
   TContext extends object,
@@ -66,14 +66,14 @@ export default function reactInterpret<
   const stop = () => service.stop();
 
   const useSelector = <T = State>(
-    selector: (emitted: State) => T = defaultSelector,
+    selector?: (emitted: State) => T,
     compare?: (a: T, b: T) => boolean,
   ) => {
     return _useSelector(service, selector, compare);
   };
 
   const useContext = <T = TContext>(
-    selector: (emitted: TContext) => T = defaultSelector,
+    selector?: (emitted: TContext) => T,
     compare?: (a: T, b: T) => boolean,
   ) => {
     const _selector = (state: State) => {

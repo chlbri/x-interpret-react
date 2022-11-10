@@ -30,10 +30,16 @@ export default function useSelector<
 ): T {
   const initialStateCacheRef = useRef<AnyState>();
 
+  type Listener = (
+    emitted: StateFrom<
+      Interpreter<TContext, any, TEvents, TTypestate, any>['machine']
+    >,
+  ) => void;
+
   // #region Hooks
   const subscribe = useCallback(
-    (handleStoreChange: any) => {
-      const { unsubscribe } = service.subscribe(handleStoreChange);
+    (listerner?: Listener) => {
+      const { unsubscribe } = service.subscribe(listerner);
       return unsubscribe;
     },
     [service],
@@ -55,7 +61,7 @@ export default function useSelector<
     compare,
   );
 
-  selectedSnapshot; //?
+  selectedSnapshot;
 
   return selectedSnapshot;
 }

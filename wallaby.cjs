@@ -1,4 +1,5 @@
-module.exports = function (wallaby) {
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+module.exports = function (_wallaby) {
   return {
     slowTestThreshold: 500, // 200 ms
     runMode: 'onsave',
