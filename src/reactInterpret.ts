@@ -1,9 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import type {
-  LengthOf,
-  StateValue,
-  TuplifyUnion,
-} from '@bemedev/decompose';
+import type { StateValue } from '@bemedev/decompose';
 import type {
   AreAllImplementationsAssumedToBeProvided,
   BaseActionObject,
@@ -21,7 +17,7 @@ import type {
 } from 'xstate';
 import { interpret } from 'xstate';
 import _useSelector from './useSelector';
-import { matches, UseMatchesProps } from './utils';
+import { matches, SenderReturn, UseMatchesProps } from './utils';
 
 export default function reactInterpret<
   TContext extends object,
@@ -99,15 +95,8 @@ export default function reactInterpret<
   const send = service.send;
 
   const sender = <T extends TEvents['type']>(type: T) => {
-    // #region Type
-    type E = Required<TEvents> extends { type: T } & infer U
-      ? LengthOf<TuplifyUnion<Extract<U, { type: T }>>> extends 0
-        ? []
-        : [Omit<Extract<TEvents, { type: T }>, 'type'>]
-      : never;
-    // #endregion
-
-    const fn = (...[event]: E) => send({ type, ...event } as any);
+    const fn = (...[event]: SenderReturn<TEvents, T>) =>
+      send({ type, ...event } as any);
     return fn;
   };
 
