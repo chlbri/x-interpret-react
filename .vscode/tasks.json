@@ -17,7 +17,7 @@
     // },
     {
       "type": "npm",
-      "script": "test-watch",
+      "script": "test:watch",
       "problemMatcher": [],
       "label": "Test",
       "detail": "Testing the project",

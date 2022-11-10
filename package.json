@@ -4,7 +4,6 @@
   "main": "lib/index.js",
   "typings": "lib/index.d.ts",
   "module": "lib/index.mjs",
-  "type": "module",
   "files": [
     "lib"
   ],
@@ -13,10 +12,11 @@
   },
   "scripts": {
     "config": "pnpm install",
-    "rollup": "rollup --config rollup.config.ts --configPlugin @rollup/plugin-typescript",
+    "rollup": "rollup -c",
+    "prepare": "husky install",
     "build": "rm -rf lib && pnpm run rollup",
     "test": "vitest run --passWithNoTests",
-    "test-watch": "pnpm test -- --watch --passWithNoTests",
+    "test:watch": "vitest --passWithNoTests",
     "remove": "rm -rf lib node_modules pnpm-lock.yaml",
     "clean": "pnpm run remove && pnpm run config",
     "prettier": "prettier --write \"src/**/*.{ts,tsx}\"",
@@ -28,15 +28,13 @@
   },
   "husky": {
     "hooks": {
-      "pre-commit": "prettier --write \"**/**.{ts,tsx,json,js,jsx,yml}\""
+      "pre-commit": "pnpm run test"
     }
   },
   "name": "@bemedev/x-interpret-react",
   "author": "chlbri <bri_lvi@icloud.com>",
   "devDependencies": {
-    "@rollup/plugin-typescript": "^9.0.2",
     "@testing-library/react-hooks": "^8.0.1",
-    "@types/node": "^18.11.9",
     "@types/react": "^18.0.25",
     "@types/use-sync-external-store": "^0.0.3",
     "@typescript-eslint/eslint-plugin": "^5.42.1",
@@ -45,27 +43,33 @@
     "esbuild": "^0.15.13",
     "eslint": "^8.27.0",
     "husky": "^8.0.2",
-    "jsdom": "^20.0.2",
     "onchange": "^7.1.0",
     "prettier": "^2.7.1",
     "react": "^18.2.0",
-    "react-dom": "^18.2.0",
     "react-test-renderer": "^18.2.0",
     "rollup": "^3.2.5",
     "rollup-plugin-dts": "^5.0.0",
     "rollup-plugin-esbuild": "^5.0.0",
+    "rollup-plugin-terser": "^7.0.2",
+    "rollup-plugin-typescript2": "^0.34.1",
     "tslib": "^2.4.1",
     "typescript": "^4.8.4",
-    "use-sync-external-store": "^1.0.0",
     "vite": "^3.2.3",
     "vite-tsconfig-paths": "^3.5.2",
     "vitest": "^0.25.1",
     "xstate": "^4.34.0"
   },
-  "wallaby": {
-    "slowTestThreshold": 200
-  },
   "dependencies": {
-    "@bemedev/decompose": "^0.1.6"
+    "@bemedev/decompose": "^0.1.6",
+    "use-sync-external-store": "^1.0.0"
+  },
+  "peerDependencies": {
+    "react": "^16.8.0 || ^17.0.0 || ^18.0.0",
+    "xstate": "^4.30.6"
+  },
+  "peerDependenciesMeta": {
+    "xstate": {
+      "optional": true
+    }
   }
 }

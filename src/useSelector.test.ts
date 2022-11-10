@@ -1,4 +1,4 @@
-import { act, renderHook } from '@testing-library/react-hooks/dom';
+import { act, renderHook } from '@testing-library/react-hooks/native';
 import { describe, expect, test } from 'vitest';
 import { interpret } from 'xstate';
 import { testmachine } from './fixtures/test.machine';
@@ -17,6 +17,6 @@ describe('Workflow', () => {
       service.send('CLICK');
     });
 
-    expect(result.current).toBe('on');
+    expect(result.current).toBe('off');
   });
 });

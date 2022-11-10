@@ -1,29 +1,27 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
-import typescript from '@rollup/plugin-typescript';
 import dts from 'rollup-plugin-dts';
 import esbuild from 'rollup-plugin-esbuild';
+import { terser } from 'rollup-plugin-terser';
 
-import json from './package.json' assert { type: 'json' };
-
-const _name = json.main.replace(/\.js$/, '');
-
-const bundle = (config: any) => ({
+/** @type {import('rollup').defineConfig} */
+const bundle = config => ({
   ...config,
   input: 'src/index.ts',
-  external: (id: string) => !/^[./]/.test(id),
+  external: id => !/^[./]/.test(id),
 });
 
+/** @type {import('rollup').RollupOptions} */
 export default [
   bundle({
-    plugins: [esbuild(), typescript()],
+    plugins: [esbuild(), terser({})],
     output: [
       {
-        file: `${_name}.js`,
+        file: `lib/index.js`,
         format: 'cjs',
         sourcemap: true,
       },
       {
-        file: `${_name}.mjs`,
+        file: `lib/index.mjs`,
         format: 'es',
         sourcemap: true,
       },
@@ -32,7 +30,7 @@ export default [
   bundle({
     plugins: [dts()],
     output: {
-      file: `${_name}.d.ts`,
+      file: `lib/index.d.ts`,
       format: 'es',
     },
   }),
