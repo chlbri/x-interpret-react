@@ -1,5 +1,11 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { decompose, StateMatching, StateValue } from '@bemedev/decompose';
+import {
+  decompose,
+  LengthOf,
+  StateMatching,
+  StateValue,
+  TuplifyUnion,
+} from '@bemedev/decompose';
 import type { MutableRefObject } from 'react';
 import type {
   EventObject,
@@ -110,3 +116,12 @@ type TSV<T> = T extends TypegenEnabled
 export type UseMatchesProps<T> = MatchOptions<
   StateMatching<TSV<T> extends StateValue ? TSV<T> : StateValue>
 >[];
+
+export type SenderReturn<
+  TEvents extends EventObject,
+  T extends TEvents['type'],
+> = Required<TEvents> extends { type: T } & infer U
+  ? LengthOf<TuplifyUnion<Extract<U, { type: T }>>> extends 0
+    ? []
+    : [Omit<Extract<TEvents, { type: T }>, 'type'>]
+  : never;
