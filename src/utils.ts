@@ -117,11 +117,24 @@ export type UseMatchesProps<T> = MatchOptions<
   StateMatching<TSV<T> extends StateValue ? TSV<T> : StateValue>
 >[];
 
+type ReducerSender<TEvents, T extends string> = LengthOf<
+  TuplifyUnion<
+    Required<
+      Extract<
+        TEvents,
+        {
+          type: T;
+        }
+      >
+    >
+  >
+>;
+
 export type SenderReturn<
   TEvents extends EventObject,
   T extends TEvents['type'],
-> = Required<TEvents> extends { type: T } & infer U
-  ? LengthOf<TuplifyUnion<Extract<U, { type: T }>>> extends 0
+> = TEvents extends { type: T } & infer U
+  ? ReducerSender<U, T> extends 0
     ? []
     : [Omit<Extract<TEvents, { type: T }>, 'type'>]
   : never;
