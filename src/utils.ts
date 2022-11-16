@@ -138,3 +138,9 @@ export type SenderReturn<
     ? []
     : [Omit<Extract<TEvents, { type: T }>, 'type'>]
   : never;
+
+export function reFunction<Parameters extends any[] = any[], Return = any>(
+  fn: (...args: Parameters) => Return,
+) {
+  return (...args: Parameters) => fn(...args);
+}

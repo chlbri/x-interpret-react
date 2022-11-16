@@ -12,10 +12,12 @@ export interface Typegen0 {
     guards: never;
     delays: never;
   };
-  eventsCausingActions: {};
+  eventsCausingActions: {
+    iterate: 'CLICK';
+  };
   eventsCausingServices: {};
   eventsCausingGuards: {};
   eventsCausingDelays: {};
   matchesStates: 'off' | 'on';
-  tags: never;
+  tags: 'busy';
 }

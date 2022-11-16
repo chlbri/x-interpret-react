@@ -17,7 +17,12 @@ import type {
 } from 'xstate';
 import { interpret } from 'xstate';
 import _useSelector from './useSelector';
-import { matches, SenderReturn, UseMatchesProps } from './utils';
+import {
+  defaultSelector,
+  matches,
+  SenderReturn,
+  UseMatchesProps,
+} from './utils';
 
 export default function reactInterpret<
   TContext extends object,
@@ -49,11 +54,20 @@ export default function reactInterpret<
   options?: InterpreterOptions,
 ) {
   // #region Types
-  type State = StateX<TContext, TEvents, any, TTypestate>;
+  type State = StateX<
+    TContext,
+    TEvents,
+    any,
+    TTypestate,
+    TResolvedTypesMeta
+  >;
 
   type Tags = (TResolvedTypesMeta extends TypegenEnabled
     ? Prop<Prop<TResolvedTypesMeta, 'resolved'>, 'tags'>
     : string)[];
+
+  type StateSelector<T> = (emitted: State) => T;
+  type ContextSelector<T> = (emitted: TContext) => T;
   // #endregion
 
   const service = interpret(machine, options);
@@ -61,35 +75,56 @@ export default function reactInterpret<
   const start = (state?: StateValue | State) => service.start(state);
   const stop = () => service.stop();
 
-  const useSelector = <T = State>(
-    selector?: (emitted: State) => T,
-    compare?: (a: T, b: T) => boolean,
-  ) => {
-    return _useSelector(service, selector, compare);
+  const createSelector = <T = State>(selector?: StateSelector<T>) => {
+    return selector;
   };
 
-  const useContext = <T = TContext>(
-    selector?: (emitted: TContext) => T,
+  const reducer = <T = State>(selector: StateSelector<T>) => {
+    const stateSelector = selector;
+
+    const reduceS = <R = T>(
+      selector: (emitted: T) => R = defaultSelector,
+    ) => {
+      const _selector = createSelector(emitted => {
+        const step = stateSelector(emitted);
+        return selector(step);
+      });
+
+      return _selector;
+    };
+
+    return reduceS;
+  };
+
+  const createContextSelector = <T = TContext>(
+    selector?: ContextSelector<T>,
+  ) => {
+    const contextReducer = reducer(state => state.context);
+    return contextReducer(selector);
+  };
+
+  const useSelector = <T = State>(
+    selector?: StateSelector<T>,
     compare?: (a: T, b: T) => boolean,
   ) => {
-    const _selector = (state: State) => {
-      if (selector) return selector(state.context);
-      return state.context as unknown as T;
-    };
-    return useSelector(_selector, compare);
+    const _selector = createSelector(selector);
+    return _useSelector(service, _selector, compare);
   };
 
   const useMatches = (...values: UseMatchesProps<TResolvedTypesMeta>) => {
-    return useSelector(({ value }) => {
+    const valueReducer = reducer(state => state.value);
+    const matchSelector = valueReducer(value => {
       const fn = matches(value);
       return fn(...values);
     });
+    return useSelector(matchSelector);
   };
 
   const useHasTags = (...tags: Tags) => {
-    return useSelector(({ hasTag }) =>
-      tags.every(tag => hasTag(tag as string)),
+    const tagSelector = createSelector(state =>
+      tags.every(tag => state.hasTag(tag)),
     );
+    return useSelector(tagSelector);
   };
 
   const send = service.send;
@@ -105,9 +140,11 @@ export default function reactInterpret<
     send,
     sender,
     stop,
+    createSelector,
+    createContextSelector,
+    reducer,
     useSelector,
-    useContext,
     useMatches,
     useHasTags,
-  };
+  } as const;
 }

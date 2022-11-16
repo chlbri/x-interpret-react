@@ -61,7 +61,5 @@ export default function useSelector<
     compare,
   );
 
-  selectedSnapshot;
-
   return selectedSnapshot;
 }
