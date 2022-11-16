@@ -100,14 +100,14 @@ export function defaultSelector<Input, Output>(value: Input) {
   return value as unknown as Output;
 }
 
-type Arr = readonly any[];
+// type Arr = readonly any[];
 
-export function partialCall<T extends Arr, U extends Arr, R>(
-  f: (...args: [...T, ...U]) => R,
-  ...headArgs: T
-) {
-  return (...tailArgs: U) => f(...headArgs, ...tailArgs);
-}
+// export function partialCall<T extends Arr, U extends Arr, R>(
+//   f: (...args: [...T, ...U]) => R,
+//   ...headArgs: T
+// ) {
+//   return (...tailArgs: U) => f(...headArgs, ...tailArgs);
+// }
 
 type TSV<T> = T extends TypegenEnabled
   ? Prop<Prop<T, 'resolved'>, 'matchesStates'>
@@ -139,8 +139,39 @@ export type SenderReturn<
     : [Omit<Extract<TEvents, { type: T }>, 'type'>]
   : never;
 
-export function reFunction<Parameters extends any[] = any[], Return = any>(
-  fn: (...args: Parameters) => Return,
+// #region SubType
+type FilterFlags<Base, Condition> = {
+  [Key in keyof Base]: Base[Key] extends Condition ? Key : never;
+};
+
+type AllowedNames<Base, Condition> = FilterFlags<
+  Base,
+  Condition
+>[keyof Base];
+
+export type SubType<Base extends object, Condition> = Pick<
+  Base,
+  AllowedNames<Base, Condition>
+>;
+// #endregion
+
+type Fn<P extends any[] = any, R = any> = (...arg: P) => R;
+type KeysFn<T extends object = object> = keyof SubType<T, Fn>;
+
+function _reFunction<P extends any[] = any[], R = any>(
+  fn: Fn<P, R>,
+  bind?: any,
 ) {
-  return (...args: Parameters) => fn(...args);
+  return (...args: P) => fn.bind(bind)(...args);
+}
+
+export function reFunction<
+  T extends object = object,
+  FnKey extends KeysFn<T> = KeysFn<T>,
+>(object: T, fn: FnKey) {
+  // eslint-disable-next-line @typescript-eslint/ban-types
+  const _fn = object[fn];
+  type Pm = T[FnKey] extends (...args: infer P) => any ? P : any[];
+  type Re = T[FnKey] extends (...args: any) => infer R ? R : any;
+  return _reFunction<Pm, Re>(_fn as any, object);
 }

@@ -1,5 +1,4 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import type { StateValue } from '@bemedev/decompose';
 import type {
   AreAllImplementationsAssumedToBeProvided,
   BaseActionObject,
@@ -20,6 +19,7 @@ import _useSelector from './useSelector';
 import {
   defaultSelector,
   matches,
+  reFunction,
   SenderReturn,
   UseMatchesProps,
 } from './utils';
@@ -72,8 +72,8 @@ export default function reactInterpret<
 
   const service = interpret(machine, options);
 
-  const start = (state?: StateValue | State) => service.start(state);
-  const stop = () => service.stop();
+  const start = reFunction(service, 'start');
+  const stop = reFunction(service, 'stop');
 
   const createSelector = <T = State>(selector?: StateSelector<T>) => {
     return selector;
