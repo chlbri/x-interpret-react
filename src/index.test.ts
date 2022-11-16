@@ -1,7 +1,7 @@
 import { act, renderHook } from '@testing-library/react-hooks/native';
 import { afterAll, beforeAll, describe, expect, test, vi } from 'vitest';
 import { testmachine } from './fixtures/test.machine';
-import reactInterpret from './reactInterpret';
+import reactInterpret from './index';
 
 describe('Acceptation', () => {
   const service = reactInterpret(testmachine);
