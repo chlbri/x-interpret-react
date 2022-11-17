@@ -63,7 +63,7 @@ export type MatchOptions<T extends string = string> =
   | { and: MatchOptions<T>[] }
   | T;
 
-function buildMatches(
+function _buildMatches(
   decomposeds: readonly string[],
   value: MatchOptions,
 ): boolean {
@@ -73,25 +73,29 @@ function buildMatches(
   } else if ('or' in value) {
     const _values = value.or;
     out = _values
-      .map(value => buildMatches(decomposeds, value))
+      .map(value => _buildMatches(decomposeds, value))
       .some(value => value === true);
   } else {
     const _values = value.and;
     out = _values
-      .map(value => buildMatches(decomposeds, value))
+      .map(value => _buildMatches(decomposeds, value))
       .every(value => value === true);
   }
 
   return out;
 }
 
-export function matches<T extends StateValue = StateValue>(value?: T) {
+export function buildMatches<T extends StateValue = StateValue>(
+  value?: T,
+) {
   if (!value) {
     return () => false;
   }
   const decomposeds = decompose(value);
   return (...values: MatchOptions<StateMatching<T>>[]) => {
-    const matchers = values.map(value => buildMatches(decomposeds, value));
+    const matchers = values.map(value =>
+      _buildMatches(decomposeds, value),
+    );
     return matchers.every(matcher => matcher === true);
   };
 }
@@ -100,6 +104,7 @@ export function defaultSelector<Input, Output>(value: Input) {
   return value as unknown as Output;
 }
 
+// #region PartialCall
 // type Arr = readonly any[];
 
 // export function partialCall<T extends Arr, U extends Arr, R>(
@@ -108,6 +113,7 @@ export function defaultSelector<Input, Output>(value: Input) {
 // ) {
 //   return (...tailArgs: U) => f(...headArgs, ...tailArgs);
 // }
+// #endregion
 
 type TSV<T> = T extends TypegenEnabled
   ? Prop<Prop<T, 'resolved'>, 'matchesStates'>
@@ -117,6 +123,7 @@ export type UseMatchesProps<T> = MatchOptions<
   StateMatching<TSV<T> extends StateValue ? TSV<T> : StateValue>
 >[];
 
+// #region ReducerSender
 type ReducerSender<TEvents, T extends string> = LengthOf<
   TuplifyUnion<
     Required<
@@ -129,7 +136,9 @@ type ReducerSender<TEvents, T extends string> = LengthOf<
     >
   >
 >;
+// #endregion
 
+// #region SenderReturn
 export type SenderReturn<
   TEvents extends EventObject,
   T extends TEvents['type'],
@@ -138,6 +147,7 @@ export type SenderReturn<
     ? []
     : [Omit<Extract<TEvents, { type: T }>, 'type'>]
   : never;
+// #endregion
 
 // #region SubType
 type FilterFlags<Base, Condition> = {
@@ -160,7 +170,7 @@ type KeysFn<T extends object = object> = keyof SubType<T, Fn>;
 
 function _reFunction<P extends any[] = any[], R = any>(
   fn: Fn<P, R>,
-  bind?: any,
+  bind: any,
 ) {
   return (...args: P) => fn.bind(bind)(...args);
 }

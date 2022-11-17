@@ -17,8 +17,8 @@ import type {
 import { interpret } from 'xstate';
 import _useSelector from './useSelector';
 import {
+  buildMatches,
   defaultSelector,
-  matches,
   reFunction,
   SenderReturn,
   UseMatchesProps,
@@ -114,7 +114,7 @@ export default function reactInterpret<
   const useMatches = (...values: UseMatchesProps<TResolvedTypesMeta>) => {
     const valueReducer = reducer(state => state.value);
     const matchSelector = valueReducer(value => {
-      const fn = matches(value);
+      const fn = buildMatches(value);
       return fn(...values);
     });
     return useSelector(matchSelector);

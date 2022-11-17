@@ -56,7 +56,7 @@ describe('Workflows', () => {
     const spyUseMatches = vi.spyOn(service, 'useMatches');
     const spyUseHasTags = vi.spyOn(service, 'useHasTags');
     const iteratorSelector = service.createContextSelector(
-      ({ iterator }) => iterator,
+      ({ testIterator: iterator }) => iterator,
     );
 
     const useIterator = () => service.useSelector(iteratorSelector);
@@ -177,7 +177,7 @@ describe('Workflows', () => {
     test('Iterator is "2"', () => {
       const selector = service.createContextSelector();
       const { result } = renderHook(() => service.useSelector(selector));
-      expect(result.current.iterator).toBe(2);
+      expect(result.current.testIterator).toBe(2);
     });
 
     test('The current state has tag "busy"', () => {
