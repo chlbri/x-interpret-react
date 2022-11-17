@@ -179,7 +179,6 @@ export function reFunction<
   T extends object = object,
   FnKey extends KeysFn<T> = KeysFn<T>,
 >(object: T, fn: FnKey) {
-  // eslint-disable-next-line @typescript-eslint/ban-types
   const _fn = object[fn];
   type Pm = T[FnKey] extends (...args: infer P) => any ? P : any[];
   type Re = T[FnKey] extends (...args: any) => infer R ? R : any;
