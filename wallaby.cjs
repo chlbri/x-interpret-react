@@ -11,7 +11,6 @@ module.exports = function (_wallaby) {
       restart: false,
     },
     hints: {
-      // or /istanbul ignore next/, or any RegExp
       ignoreCoverage: /ignore coverage/,
     },
   };

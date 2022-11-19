@@ -1,6 +1,6 @@
 {
   "name": "@bemedev/x-interpret-react",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "A simple function that use XState like a RXjs Observable",
   "author": {
     "email": "bri_lvi@icloud.com",
@@ -17,6 +17,12 @@
   "engines": {
     "node": ">=12"
   },
+  "keywords": [
+    "react",
+    "XState",
+    "hook",
+    "StateMachine"
+  ],
   "scripts": {
     "config": "pnpm install",
     "rollup": "rollup -c",
@@ -62,7 +68,6 @@
     "xstate": "^4.34.0"
   },
   "dependencies": {
-    "@bemedev/decompose": "^0.1.6",
     "@bemedev/x-matches": "^0.0.3",
     "use-sync-external-store": "^1.2.0"
   },

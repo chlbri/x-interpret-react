@@ -1,11 +1,10 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import {
-  LengthOf,
+
+import type {
+  MatchOptions,
   StateMatching,
   StateValue,
-  TuplifyUnion,
-} from '@bemedev/decompose';
-import type { MatchOptions } from '@bemedev/x-matches';
+} from '@bemedev/x-matches';
 import type { MutableRefObject } from 'react';
 import type {
   EventObject,
@@ -15,6 +14,31 @@ import type {
   TypegenEnabled,
   Typestate,
 } from 'xstate';
+
+export type LengthOf<T> = T extends ReadonlyArray<unknown>
+  ? T['length']
+  : number;
+
+// #region Tuplify Union
+// #region Preparation
+type _UnionToIntersection<U> = (
+  U extends unknown ? (k: U) => void : never
+) extends (k: infer I) => void
+  ? I
+  : never;
+type _LastOf<T> = _UnionToIntersection<
+  T extends unknown ? () => T : never
+> extends () => infer R
+  ? R
+  : never;
+type _Push<T extends unknown[], V> = [...T, V];
+type _TuplifyUnionBoolean<T> = [T] extends [never] ? true : false;
+// #endregion
+
+export type TuplifyUnion<T> = true extends _TuplifyUnionBoolean<T>
+  ? []
+  : _Push<TuplifyUnion<Exclude<T, _LastOf<T>>>, _LastOf<T>>;
+// #endregion
 
 export function getServiceSnapshot<
   TContext extends object,
@@ -54,7 +78,10 @@ export function getSnapShot<
   return snapshot;
 }
 
-export const defaultCompare = <T>(a: T, b: T) => a === b;
+export type Compare = <T>(a: T, b: T) => boolean;
+
+// ignore coverage
+export const defaultCompare: Compare = (a, b) => a === b;
 
 export function defaultSelector<Input, Output>(value: Input) {
   return value as unknown as Output;

@@ -1,7 +1,6 @@
 lockfileVersion: 5.4
 
 specifiers:
-  '@bemedev/decompose': ^0.1.6
   '@bemedev/x-matches': ^0.0.3
   '@testing-library/react-hooks': ^8.0.1
   '@types/react': ^18.0.25
@@ -31,7 +30,6 @@ specifiers:
   xstate: ^4.34.0
 
 dependencies:
-  '@bemedev/decompose': 0.1.6
   '@bemedev/x-matches': 0.0.3
   use-sync-external-store: 1.2.0_react@18.2.0
 
@@ -58,7 +56,7 @@ devDependencies:
   tslib: 2.4.1
   typescript: 4.9.3
   vite: 3.2.4
-  vite-tsconfig-paths: 3.5.2_vite@3.2.4
+  vite-tsconfig-paths: 3.6.0_vite@3.2.4
   vitest: 0.25.2
   xstate: 4.34.0
 
@@ -3572,10 +3570,10 @@ packages:
       react: 18.2.0
     dev: false
 
-  /vite-tsconfig-paths/3.5.2_vite@3.2.4:
+  /vite-tsconfig-paths/3.6.0_vite@3.2.4:
     resolution:
       {
-        integrity: sha512-xJMgHA2oJ28QCG2f+hXrcqzo7IttrSRK4A//Tp94CfuX5eetOx33qiwXHUdi3FwkHP2ocpxHuvE45Ix67gwEmQ==,
+        integrity: sha512-UfsPYonxLqPD633X8cWcPFVuYzx/CMNHAjZTasYwX69sXpa4gNmQkR0XCjj82h7zhLGdTWagMjC1qfb9S+zv0A==,
       }
     peerDependencies:
       vite: '>2.0.0-0'
