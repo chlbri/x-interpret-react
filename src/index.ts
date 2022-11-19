@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import buildMatches from '@bemedev/x-matches';
 import type {
   AreAllImplementationsAssumedToBeProvided,
   BaseActionObject,
@@ -17,7 +18,6 @@ import type {
 import { interpret } from 'xstate';
 import _useSelector from './useSelector';
 import {
-  buildMatches,
   defaultSelector,
   reFunction,
   SenderReturn,

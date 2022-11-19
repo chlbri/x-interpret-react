@@ -1,11 +1,11 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import {
-  decompose,
   LengthOf,
   StateMatching,
   StateValue,
   TuplifyUnion,
 } from '@bemedev/decompose';
+import type { MatchOptions } from '@bemedev/x-matches';
 import type { MutableRefObject } from 'react';
 import type {
   EventObject,
@@ -55,50 +55,6 @@ export function getSnapShot<
 }
 
 export const defaultCompare = <T>(a: T, b: T) => a === b;
-
-export type MatchOptions<T extends string = string> =
-  | {
-      or: MatchOptions<T>[];
-    }
-  | { and: MatchOptions<T>[] }
-  | T;
-
-function _buildMatches(
-  decomposeds: readonly string[],
-  value: MatchOptions,
-): boolean {
-  let out = false;
-  if (typeof value === 'string') {
-    out = decomposeds.includes(value);
-  } else if ('or' in value) {
-    const _values = value.or;
-    out = _values
-      .map(value => _buildMatches(decomposeds, value))
-      .some(value => value === true);
-  } else {
-    const _values = value.and;
-    out = _values
-      .map(value => _buildMatches(decomposeds, value))
-      .every(value => value === true);
-  }
-
-  return out;
-}
-
-export function buildMatches<T extends StateValue = StateValue>(
-  value?: T,
-) {
-  if (!value) {
-    return () => false;
-  }
-  const decomposeds = decompose(value);
-  return (...values: MatchOptions<StateMatching<T>>[]) => {
-    const matchers = values.map(value =>
-      _buildMatches(decomposeds, value),
-    );
-    return matchers.every(matcher => matcher === true);
-  };
-}
 
 export function defaultSelector<Input, Output>(value: Input) {
   return value as unknown as Output;

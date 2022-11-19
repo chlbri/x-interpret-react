@@ -1,4 +1,3 @@
-import { expect } from 'vitest';
 import { assign, createMachine, Interpreter } from 'xstate';
 
 export type TContext = { testIterator: number };
@@ -23,28 +22,10 @@ export const testmachine = createMachine(
     states: {
       on: {
         on: { CLICK: { target: 'off', actions: 'iterate' } },
-        meta: {
-          test: (service: TestContext) => {
-            expect(
-              service.getSnapshot().context.testIterator,
-            ).toBeDefined();
-            expect(service.getSnapshot().value).toBe('on');
-            expect(service.getSnapshot().tags).not.toContain('busy');
-          },
-        },
       },
       off: {
         on: { CLICK: { target: 'on', actions: 'iterate' } },
         tags: 'busy',
-        meta: {
-          test: (service: TestContext) => {
-            expect(
-              service.getSnapshot().context.testIterator,
-            ).toBeDefined();
-            expect(service.getSnapshot().value).toBe('off');
-            expect(service.getSnapshot().tags).toContain('busy');
-          },
-        },
       },
     },
   },
