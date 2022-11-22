@@ -17,12 +17,7 @@ import type {
 } from 'xstate';
 import { interpret } from 'xstate';
 import _useSelector from './useSelector';
-import {
-  defaultSelector,
-  reFunction,
-  SenderReturn,
-  UseMatchesProps,
-} from './utils';
+import { defaultSelector, reFunction, UseMatchesProps } from './utils';
 
 export default function reactInterpret<
   TContext extends object,
@@ -130,9 +125,18 @@ export default function reactInterpret<
   const send = service.send;
 
   const sender = <T extends TEvents['type']>(type: T) => {
-    const fn = (...[event]: SenderReturn<TEvents, T>) =>
-      send({ type, ...event } as any);
-    return fn;
+    type E = TEvents extends {
+      type: T;
+    } & infer U
+      ? // eslint-disable-next-line @typescript-eslint/ban-types
+        U extends {}
+        ? Omit<U, 'type'>
+        : never
+      : never;
+
+    return (...[event]: E extends never ? [] : [event: E]) => {
+      send({ type, ...(event as any) });
+    };
   };
 
   return {
