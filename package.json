@@ -73,6 +73,7 @@
   },
   "dependencies": {
     "@bemedev/x-matches": "^0.0.3",
+    "@maverick-js/signals": "^5.11.4",
     "use-sync-external-store": "^1.2.0"
   },
   "peerDependencies": {

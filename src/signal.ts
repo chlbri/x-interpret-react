@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import buildMatches from '@bemedev/x-matches';
+import { computed as _computed, signal } from '@maverick-js/signals';
 import type {
   AreAllImplementationsAssumedToBeProvided,
   BaseActionObject,
@@ -17,10 +18,9 @@ import type {
   Typestate,
 } from 'xstate';
 import { interpret } from 'xstate';
-import _useSelector from './useSelector';
 import { UseMatchesProps, defaultSelector, reFunction } from './utils';
 
-export default function reactInterpret<
+export default function createSignal<
   TContext extends object,
   TEvents extends EventObject = EventObject,
   TTypestate extends Typestate<TContext> = {
@@ -71,7 +71,7 @@ export default function reactInterpret<
   const start = reFunction(service, 'start');
   const stop = reFunction(service, 'stop');
 
-  const createSelector = <T = State>(selector?: StateSelector<T>) => {
+  const createSelector = <T = State>(selector: StateSelector<T>) => {
     return selector;
   };
 
@@ -99,28 +99,37 @@ export default function reactInterpret<
     return contextReducer(selector);
   };
 
-  const useSelector = <T = State>(
-    selector?: StateSelector<T>,
-    compare?: (a: T, b: T) => boolean,
-  ) => {
-    const _selector = createSelector(selector);
-    return _useSelector(service, _selector, compare);
+  const _signal = signal(service.getSnapshot());
+
+  service.subscribe(state => {
+    if (state.changed) {
+      _signal.set(state);
+    }
+  });
+
+  const computed = <T = State>(selector?: StateSelector<T>) => {
+    return selector ? _computed(() => selector(_signal())) : _signal;
   };
 
-  const useMatches = (...values: UseMatchesProps<TResolvedTypesMeta>) => {
+  const context = <T = TContext>(selector?: ContextSelector<T>) => {
+    const contextSelector = createContextSelector(selector);
+    return computed(contextSelector);
+  };
+
+  const matches = (...values: UseMatchesProps<TResolvedTypesMeta>) => {
     const valueReducer = reducer(state => state.value);
     const matchSelector = valueReducer(value => {
       const fn = buildMatches(value);
       return fn(...values);
     });
-    return useSelector(matchSelector);
+    return computed(matchSelector);
   };
 
-  const useHasTags = (...tags: Tags) => {
+  const hasTags = (...tags: Tags) => {
     const tagSelector = createSelector(state =>
       tags.every(tag => state.hasTag(tag)),
     );
-    return useSelector(tagSelector);
+    return computed(tagSelector);
   };
 
   const send = service.send;
@@ -148,10 +157,9 @@ export default function reactInterpret<
     createSelector,
     createContextSelector,
     reducer,
-    useSelector,
-    useMatches,
-    useHasTags,
-  } as const;
+    computed,
+    context,
+    matches,
+    hasTags,
+  };
 }
-
-export { _useSelector };

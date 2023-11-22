@@ -8,6 +8,9 @@ dependencies:
   '@bemedev/x-matches':
     specifier: ^0.0.3
     version: 0.0.3
+  '@maverick-js/signals':
+    specifier: ^5.11.4
+    version: 5.11.4
   use-sync-external-store:
     specifier: ^1.2.0
     version: 1.2.0(react@18.2.0)
@@ -846,6 +849,13 @@ packages:
       '@jridgewell/resolve-uri': 3.1.1
       '@jridgewell/sourcemap-codec': 1.4.15
     dev: true
+
+  /@maverick-js/signals@5.11.4:
+    resolution:
+      {
+        integrity: sha512-fkUqNfnJK1kgfsKimaLp2jcfQr7NXwHZWBhqhQ3pifnYSZrBJv+4tU/klKyGf1mA33mVBYustCAgilJppzGjig==,
+      }
+    dev: false
 
   /@nodelib/fs.scandir@2.1.5:
     resolution:
