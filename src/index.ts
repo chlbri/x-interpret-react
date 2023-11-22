@@ -5,19 +5,20 @@ import type {
   BaseActionObject,
   EventObject,
   InterpreterOptions,
+  MissingImplementationsError,
   NoInfer,
   Prop,
   ResolveTypegenMeta,
   ServiceMap,
-  State as StateX,
   StateMachine,
+  State as StateX,
   TypegenDisabled,
   TypegenEnabled,
   Typestate,
 } from 'xstate';
 import { interpret } from 'xstate';
 import _useSelector from './useSelector';
-import { defaultSelector, reFunction, UseMatchesProps } from './utils';
+import { UseMatchesProps, defaultSelector, reFunction } from './utils';
 
 export default function reactInterpret<
   TContext extends object,
@@ -45,7 +46,7 @@ export default function reactInterpret<
         TServiceMap,
         TResolvedTypesMeta
       >
-    : 'Some implementations missing',
+    : MissingImplementationsError<TResolvedTypesMeta>,
   options?: InterpreterOptions,
 ) {
   // #region Types
