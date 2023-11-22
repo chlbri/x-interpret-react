@@ -1,4 +1,3 @@
 {
-  "task.allowAutomaticTasks": "on",
-  "wallaby.startAutomatically": false
+  "task.allowAutomaticTasks": "on"
 }
