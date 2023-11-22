@@ -44,7 +44,7 @@ describe('01 -> Acceptation', () => {
 });
 
 describe('02 -> Workflows', () => {
-  const workflow = () => {
+  const useWorkflow = () => {
     const service = createSignal(testmachine);
     const spyStart = vi.spyOn(service, 'start');
     const spySend = vi.spyOn(service, 'send');
@@ -100,8 +100,15 @@ describe('02 -> Workflows', () => {
   };
 
   describe.concurrent('Workflow #1', () => {
-    const { spyStart, spySend, spySender, spyContext, iterator, service } =
-      workflow();
+    const {
+      spyStart,
+      spySend,
+      spyComputed,
+      spySender,
+      spyContext,
+      iterator,
+      service,
+    } = useWorkflow();
 
     test('01 -> Start is called', () => {
       expect(spyStart).toBeCalledTimes(1);
@@ -121,7 +128,7 @@ describe('02 -> Workflows', () => {
       service.send('CLICK');
     });
 
-    test('05 -> terator is "1"', () => {
+    test('05 -> Iterator is "1"', () => {
       const _state = service.computed()();
       const _iterator = _state.context.testIterator;
       expect(_iterator).toBe(1);
@@ -142,7 +149,7 @@ describe('02 -> Workflows', () => {
       expect(_match).toBe(true);
     });
 
-    test('09 -> terator is "2"', () => {
+    test('09 -> Iterator is "2"', () => {
       const _iterator = service.context(data => data.testIterator)();
       expect(_iterator).toBe(2);
     });
@@ -159,15 +166,19 @@ describe('02 -> Workflows', () => {
       test('03 -> Context is called once', () => {
         expect(spyContext).toBeCalledTimes(1);
       });
+
+      test('04 -> Computed is called once', () => {
+        expect(spyComputed).toBeCalled();
+      });
     });
   });
 
   describe.concurrent('Workflow #2', () => {
-    const { service } = workflow();
+    const { service } = useWorkflow();
 
     test('01 -> The current state has tag "busy"', () => {
-      const _hastTag = service.hasTags('busy');
-      expect(_hastTag()).toBe(true);
+      const _hastTag = service.hasTags('busy')();
+      expect(_hastTag).toBe(true);
     });
   });
 });
