@@ -15,9 +15,8 @@ import type {
   Typestate,
 } from 'xstate';
 
-export type LengthOf<T> = T extends ReadonlyArray<unknown>
-  ? T['length']
-  : number;
+export type LengthOf<T> =
+  T extends ReadonlyArray<unknown> ? T['length'] : number;
 
 // #region Tuplify Union
 // #region Preparation
@@ -26,18 +25,20 @@ type _UnionToIntersection<U> = (
 ) extends (k: infer I) => void
   ? I
   : never;
-type _LastOf<T> = _UnionToIntersection<
-  T extends unknown ? () => T : never
-> extends () => infer R
-  ? R
-  : never;
+type _LastOf<T> =
+  _UnionToIntersection<
+    T extends unknown ? () => T : never
+  > extends () => infer R
+    ? R
+    : never;
 type _Push<T extends unknown[], V> = [...T, V];
 type _TuplifyUnionBoolean<T> = [T] extends [never] ? true : false;
 // #endregion
 
-export type TuplifyUnion<T> = true extends _TuplifyUnionBoolean<T>
-  ? []
-  : _Push<TuplifyUnion<Exclude<T, _LastOf<T>>>, _LastOf<T>>;
+export type TuplifyUnion<T> =
+  true extends _TuplifyUnionBoolean<T>
+    ? []
+    : _Push<TuplifyUnion<Exclude<T, _LastOf<T>>>, _LastOf<T>>;
 // #endregion
 
 export function getServiceSnapshot<
@@ -49,7 +50,7 @@ export function getServiceSnapshot<
   },
 >(
   service: Interpreter<TContext, any, TEvents, TTypestate>,
-): StateFrom<typeof service['machine']> {
+): StateFrom<(typeof service)['machine']> {
   return service.status !== 0
     ? service.getSnapshot()
     : service.initialState;
@@ -65,7 +66,7 @@ export function getSnapShot<
 >(
   service: Interpreter<TContext, any, TEvents, TTypestate>,
   ref: MutableRefObject<
-    StateFrom<typeof service['machine']> | null | undefined
+    StateFrom<(typeof service)['machine']> | null | undefined
   >,
 ) {
   if (service.status === 0 && ref.current) {

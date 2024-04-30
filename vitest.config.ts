@@ -5,6 +5,10 @@ import { defineConfig } from 'vitest/config';
 export default defineConfig({
   plugins: [tsconfigPaths(), react()],
   test: {
-    globals: true,
+    coverage: {
+      enabled: true,
+      all: true,
+      provider: 'v8',
+    },
   },
 });

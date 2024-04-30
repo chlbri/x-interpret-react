@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
+import terser from '@rollup/plugin-terser';
 import dts from 'rollup-plugin-dts';
 import esbuild from 'rollup-plugin-esbuild';
-import { terser } from 'rollup-plugin-terser';
 
 /** @type {import('rollup').defineConfig} */
 const bundle = config => ({
@@ -16,13 +16,13 @@ export default [
     plugins: [esbuild(), terser({})],
     output: [
       {
-        file: `lib/index.js`,
+        file: `lib/index.cjs`,
         format: 'cjs',
         sourcemap: true,
       },
       {
-        file: `lib/index.mjs`,
-        format: 'es',
+        file: `lib/index.js`,
+        format: 'esm',
         sourcemap: true,
       },
     ],
