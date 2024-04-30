@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
+import { terser } from '@rollup/plugin-terser';
 import dts from 'rollup-plugin-dts';
 import esbuild from 'rollup-plugin-esbuild';
-import { terser } from 'rollup-plugin-terser';
 
 /** @type {import('rollup').defineConfig} */
 const bundle = config => ({

@@ -1,6 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { useCallback, useRef } from 'react';
-import { useSyncExternalStoreWithSelector } from 'use-sync-external-store/shim/with-selector';
 import type {
   AnyState,
   EventObject,
@@ -9,6 +8,7 @@ import type {
   StateFrom,
   Typestate,
 } from 'xstate';
+import { useSyncExternalStoreWithSelector } from './useSyncExternalStoreWithSelector';
 import { defaultCompare, defaultSelector, getSnapShot } from './utils';
 
 export default function useSelector<
