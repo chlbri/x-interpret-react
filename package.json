@@ -1,6 +1,6 @@
 {
   "name": "@bemedev/x-interpret-react",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "A simple function that use XState like a RXjs Observable",
   "repository": {
     "type": "git",
