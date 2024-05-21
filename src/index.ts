@@ -153,5 +153,3 @@ export default function reactInterpret<
     useHasTags,
   } as const;
 }
-
-export { _useSelector };
